@@ -35,7 +35,7 @@ func CallFunc(f interface{}, methodName string, args ...interface{}) interface{}
 }
 
 func convertFuncArgs(args []interface{}) []reflect.Value {
-	funcArgs := make([]reflect.Value, len(args))
+	funcArgs := []reflect.Value{}
 
 	for _, arg := range args {
 		value, wrapped := arg.(reflect.Value)
