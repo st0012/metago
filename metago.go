@@ -15,7 +15,7 @@ func CallFunc(receiver interface{}, methodName string, args ...interface{}) inte
 		value = reflect.ValueOf(receiver)
 	}
 
-	funcArgs := convertFuncArgs(args)
+	funcArgs := convertFuncArgs(args...)
 
 	ptr, value = getReflectPtrAndValue(value, receiver)
 
@@ -34,7 +34,7 @@ func CallFunc(receiver interface{}, methodName string, args ...interface{}) inte
 	panic(fmt.Sprintf("%T type objects don't have %s method.", value.Interface(), methodName))
 }
 
-func convertFuncArgs(args []interface{}) []reflect.Value {
+func convertFuncArgs(args ...interface{}) []reflect.Value {
 	funcArgs := []reflect.Value{}
 
 	for _, arg := range args {
