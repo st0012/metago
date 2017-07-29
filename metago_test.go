@@ -3,8 +3,8 @@ package metago
 import "testing"
 
 const (
-	attrErrorFormat         = "Expect subject's attribute '%[1]s' to be: '%[2]s'. got: %[3]v(%[3]T)"
-	expectResultErrorFormat = "Expect result to be: '%[1]s'. got: %[2]v(%[2]T)"
+	attrErrorFormat         = "Expect subject's attribute '%[1]s' to be: '%[2]v'. got: %[3]v(%[3]T)"
+	expectResultErrorFormat = "Expect result to be: '%[1]v'. got: %[2]v(%[2]T)"
 )
 
 type Bar struct {
@@ -18,6 +18,10 @@ func (b *Bar) PtrName() string {
 
 func (b *Bar) SetPtrName(n string) {
 	b.ptrName = n
+}
+
+func (b *Bar) Foo() (string, int) {
+	return "foo", 100
 }
 
 func (b Bar) ValueName() string {
@@ -66,5 +70,22 @@ func TestCallFuncWithValueReceiver(t *testing.T) {
 
 	if n != "John" {
 		t.Fatalf(expectResultErrorFormat, "John", n)
+	}
+}
+
+func TestCallFuncWithMultipleReturnValue(t *testing.T) {
+	b := &Bar{}
+	result := b.Send("Foo")
+	results := result.([]interface{})
+	s := results[0]
+
+	if s != "foo" {
+		t.Fatalf(expectResultErrorFormat, "foo", s)
+	}
+
+	i := results[1]
+
+	if i != 100 {
+		t.Fatalf(expectResultErrorFormat, 100, i)
 	}
 }
