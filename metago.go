@@ -5,6 +5,8 @@ import (
 	"reflect"
 )
 
+// CallFunc will call the target method on receiver with given args and returns the execution result.
+// If no result is returned from target method, CallFunc will still returns a nil.
 func CallFunc(receiver interface{}, methodName string, args ...interface{}) interface{} {
 	var ptr reflect.Value
 	var value reflect.Value
@@ -15,26 +17,27 @@ func CallFunc(receiver interface{}, methodName string, args ...interface{}) inte
 		value = reflect.ValueOf(receiver)
 	}
 
-	funcArgs := convertFuncArgs(args...)
+	funcArgs := WrapArguments(args...)
 
 	ptr, value = getReflectPtrAndValue(value, receiver)
 
 	method := value.MethodByName(methodName)
 
 	if method.IsValid() {
-		return unwrapFuncResult(method.Call(funcArgs))
+		return UnwrapReflectValues(method.Call(funcArgs))
 	}
 
 	method = ptr.MethodByName(methodName)
 
 	if method.IsValid() {
-		return unwrapFuncResult(method.Call(funcArgs))
+		return UnwrapReflectValues(method.Call(funcArgs))
 	}
 
 	panic(fmt.Sprintf("%T type objects don't have %s method.", value.Interface(), methodName))
 }
 
-func convertFuncArgs(args ...interface{}) []reflect.Value {
+// WrapArguments receives a sequence of arguments and wrap each one of them into reflect.Value
+func WrapArguments(args ...interface{}) []reflect.Value {
 	funcArgs := []reflect.Value{}
 
 	for _, arg := range args {
@@ -51,7 +54,9 @@ func convertFuncArgs(args ...interface{}) []reflect.Value {
 	return funcArgs
 }
 
-func unwrapFuncResult(result interface{}) interface{} {
+// UnwrapReflectValues unwraps given result(s) from reflect.Value to interface
+// If result is an empty slice of reflect.Value, it returns nil
+func UnwrapReflectValues(result interface{}) interface{} {
 	switch result := result.(type) {
 	case []reflect.Value:
 		if len(result) == 0 {
