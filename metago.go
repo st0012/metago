@@ -5,19 +5,19 @@ import (
 	"reflect"
 )
 
-func CallFunc(f interface{}, methodName string, args ...interface{}) interface{} {
+func CallFunc(receiver interface{}, methodName string, args ...interface{}) interface{} {
 	var ptr reflect.Value
 	var value reflect.Value
 
-	value, ok := f.(reflect.Value)
+	value, ok := receiver.(reflect.Value)
 
 	if !ok {
-		value = reflect.ValueOf(f)
+		value = reflect.ValueOf(receiver)
 	}
 
 	funcArgs := convertFuncArgs(args)
 
-	ptr, value = getReflectPtrAndValue(value, f)
+	ptr, value = getReflectPtrAndValue(value, receiver)
 
 	method := value.MethodByName(methodName)
 
