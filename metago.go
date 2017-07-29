@@ -1,8 +1,8 @@
 package metago
 
 import (
-	"reflect"
 	"fmt"
+	"reflect"
 )
 
 func CallFunc(f interface{}, methodName string, args ...interface{}) interface{} {
@@ -50,7 +50,6 @@ func convertFuncArgs(args []interface{}) []reflect.Value {
 
 	return funcArgs
 }
-
 
 func unwrapFuncResult(result interface{}) interface{} {
 	switch result := result.(type) {

@@ -2,13 +2,13 @@ package metago
 
 import "testing"
 
-const(
-	attrErrorFormat = "Expect subject's attribute '%[1]s' to be: '%[2]s'. got: %[3]v(%[3]T)"
+const (
+	attrErrorFormat         = "Expect subject's attribute '%[1]s' to be: '%[2]s'. got: %[3]v(%[3]T)"
 	expectResultErrorFormat = "Expect result to be: '%[1]s'. got: %[2]v(%[2]T)"
 )
 
 type Bar struct {
-	ptrName string
+	ptrName   string
 	valueName string
 }
 
@@ -38,7 +38,7 @@ func TestCallFuncWithPtrReceiver(t *testing.T) {
 	b.Send("SetPtrName", "John")
 
 	if b.ptrName != "John" {
-		t.Errorf(attrErrorFormat, "ptrName" ,"John", b.ptrName)
+		t.Errorf(attrErrorFormat, "ptrName", "John", b.ptrName)
 	}
 
 	n := b.Send("PtrName")
